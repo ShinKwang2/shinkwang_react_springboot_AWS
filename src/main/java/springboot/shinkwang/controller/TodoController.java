@@ -18,7 +18,7 @@ import java.util.List;
 public class TodoController {
 
     private final TodoService service;
-    
+
     // testTodo 메서드 작성하기
     @GetMapping("/test")
     public ResponseEntity<?> testTodo() {
