@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import springboot.shinkwang.model.TodoEntity;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -16,6 +15,7 @@ public class TodoDTO {
     private String title;
     private boolean done;
 
+    @Builder
     public TodoDTO(final TodoEntity entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();

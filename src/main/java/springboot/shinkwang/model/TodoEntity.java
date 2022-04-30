@@ -1,9 +1,6 @@
 package springboot.shinkwang.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -12,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Data
 @Entity
@@ -25,4 +22,12 @@ public class TodoEntity {
     private String userId; // 이 오브젝트를 생성한 사용자의 아이디
     private String title;   // Todo 타이틀(예: 운동하기)
     private boolean done;   // true - todo를 완료한 경우 (checked)
+
+    public void changeTitle(String newTitle) {
+        this.title = newTitle;
+    }
+
+    public void changeDone(boolean done) {
+        this.done = done;
+    }
 }
