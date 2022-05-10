@@ -3,6 +3,7 @@ package springboot.shinkwang.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springboot.shinkwang.dto.ResponseDTO;
 import springboot.shinkwang.dto.UserDTO;
 import springboot.shinkwang.model.UserEntity;
+import springboot.shinkwang.security.TokenProvider;
 import springboot.shinkwang.service.UserService;
 
 @Slf4j
@@ -19,6 +21,10 @@ import springboot.shinkwang.service.UserService;
 public class UserController {
 
     private final UserService userService;
+
+    private final TokenProvider tokenProvider;
+
+    private final PasswordEncoder passwordEncoder;  // @Bean in WebSecurityConfig
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -53,13 +59,15 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
         UserEntity user = userService.getByCredentials(
-                userDTO.getEmail(), userDTO.getPassword());
+                userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
 
         if (user != null) {
             // 토큰 생성
+            final String token = tokenProvider.create(user);
             final UserDTO responseUserDTO = UserDTO.builder()
                     .email(user.getEmail())
                     .id(user.getId())
+                    .token(token)
                     .build();
 
             return ResponseEntity.ok().body(responseUserDTO);
